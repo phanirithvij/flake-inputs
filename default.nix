@@ -129,6 +129,23 @@ rec {
         };
         narHash = info.narHash;
       }
+    else if info.type == "file" then
+      {
+        # simplified version of https://github.com/NixOS/nix/blob/master/src/libexpr/fetchurl.nix
+        outPath = derivation {
+          url = info.url;
+          name = baseNameOf (toString info.url);
+
+          preferLocalBuild = true;
+          system = "builtin";
+          builder = "builtins:fetchurl";
+
+          outputHash = info.narHash;
+          outputHashAlgo = "sha256";
+          outputHashMode = "recursive";
+        };
+        narHash = info.narHash;
+      }
     else if info.type == "tarball" then
       {
         outPath = fetchTarball (
