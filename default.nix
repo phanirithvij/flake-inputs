@@ -129,6 +129,15 @@ rec {
         };
         narHash = info.narHash;
       }
+    else if info.type == "file" then
+      {
+        outPath = builtins.fetchurl {
+          url = info.url;
+          sha256 = info.narHash;
+          recursiveHash = true;
+        };
+        narHash = info.narHash;
+      }
     else if info.type == "tarball" then
       {
         outPath = fetchTarball (
